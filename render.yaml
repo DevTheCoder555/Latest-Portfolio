@@ -1,0 +1,21 @@
+# render.yaml — Deploy backend to Render.com for FREE
+# ─────────────────────────────────────────────────────
+# 1. Push your project to GitHub
+# 2. Go to https://render.com → New → Web Service
+# 3. Connect your GitHub repo
+# 4. Render auto-detects this file and configures everything
+# 5. Add EMAIL_USER and EMAIL_PASS in Render → Environment tab
+
+services:
+  - type: web
+    name: devyansh-portfolio-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: EMAIL_USER
+        sync: false     # You set this manually in Render dashboard
+      - key: EMAIL_PASS
+        sync: false     # You set this manually in Render dashboard

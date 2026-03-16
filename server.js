@@ -2,7 +2,10 @@ import express    from 'express'
 import nodemailer from 'nodemailer'
 import cors       from 'cors'
 import dotenv     from 'dotenv'
+import dns from 'dns'  
+
 dotenv.config()
+dns.setDefaultResultOrder("ipv4first")  
 
 const app  = express()
 const PORT = process.env.PORT || 3001
@@ -25,6 +28,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   secure: true,
+    family: 4, // ⭐ force IPv4 (fix Render timeout)
+
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS

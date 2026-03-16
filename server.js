@@ -7,6 +7,11 @@ dotenv.config()
 const app  = express()
 const PORT = process.env.PORT || 3001
 
+console.log('\n🔍 Environment Check:')
+console.log(`   EMAIL_USER: ${process.env.EMAIL_USER ? '✅ Set' : '❌ NOT SET'}`)
+console.log(`   EMAIL_PASS: ${process.env.EMAIL_PASS ? '✅ Set' : '❌ NOT SET'}`)
+console.log(`   PORT: ${PORT}\n`)
+
 // ── CORS: allow any origin so deployed frontend can reach this backend ──
 app.use(cors({
   origin: '*',
@@ -28,15 +33,20 @@ const transporter = nodemailer.createTransport({
 transporter.verify((err) => {
   if (err) {
     console.error('❌ Email config error:', err.message)
-    console.error('   Make sure EMAIL_USER and EMAIL_PASS are set in .env')
+    console.error('   ⚠️  TROUBLESHOOTING:')
+    console.error('   1. Check EMAIL_USER and EMAIL_PASS in .env file')
+    console.error('   2. Verify you\'re using a 16-char App Password (not regular Gmail password)')
+    console.error('   3. Ensure 2-Step Verification is enabled on your Gmail account')
+    console.error('   4. Go to: https://myaccount.google.com/security → App passwords')
   } else {
     console.log('✅ Email transporter ready — connected to Gmail')
+    console.log('   Ready to send emails through: ' + process.env.EMAIL_USER)
   }
 })
 
 // ── Health check ────────────────────────────────────────────────────────
 app.get('/', (_req, res) => {
-  res.json({ status: 'OK', message: 'Portfolio backend running 🚀' })
+  res.json({ status: 'OK', message: 'Portfolio backend running 🚀', email: process.env.EMAIL_USER })
 })
 
 // ── POST /api/send-email ────────────────────────────────────────────────
@@ -152,16 +162,21 @@ app.post('/api/send-email', async (req, res) => {
   try {
     await transporter.sendMail(toOwner)
     await transporter.sendMail(autoReply)
-    console.log(`✅ Email sent — from ${name} <${email}>  at ${now}`)
-    res.status(200).json({ success: true, message: 'Email sent!' })
+    console.log(`✅ Email sent from ${name} <${email}> at ${now}`)
+    res.status(200).json({ success: true, message: 'Email sent successfully!' })
   } catch (err) {
     console.error('❌ Send failed:', err.message)
-    res.status(500).json({ success: false, message: 'Failed to send email. Check server logs.' })
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to send email. Check server logs.',
+      error: err.message 
+    })
   }
 })
 
 app.listen(PORT, () => {
   console.log(`\n🚀  Backend running at http://localhost:${PORT}`)
   console.log(`📬  POST /api/send-email ready`)
+  console.log(`💻  Frontend should connect to: http://localhost:${PORT}`)
   console.log(`💡  Press Ctrl+C to stop\n`)
 })

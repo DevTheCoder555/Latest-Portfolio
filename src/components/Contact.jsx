@@ -36,18 +36,26 @@ export default function Contact() {
         throw new Error(data.message || 'Server error')
       }
     } catch (err) {
-      setErrMsg(err.message.includes('fetch') ? 'Backend not running. Start server.js first.' : err.message)
+      const errorMsg = err.message.includes('fetch') 
+        ? 'Backend not running. Start server.js first.' 
+        : err.message
+      setErrMsg(errorMsg)
       setStatus('error')
       setTimeout(() => setStatus(null), 5000)
     }
   }
 
   const inputStyle = {
-    width: '100%', padding: '0.85rem 1rem',
+    width: '100%', 
+    padding: '0.85rem 1rem',
     background: 'rgba(255,255,255,0.03)',
     border: '1px solid var(--glass-border)',
-    borderRadius: 8, color: 'var(--text)', fontSize: '0.95rem',
-    fontFamily: "'Rajdhani',sans-serif", outline: 'none', resize: 'vertical',
+    borderRadius: 8, 
+    color: 'var(--text)', 
+    fontSize: '16px', // Prevents iOS zoom on input
+    fontFamily: "'Rajdhani',sans-serif", 
+    outline: 'none', 
+    resize: 'vertical',
     transition: 'border-color 0.3s, box-shadow 0.3s',
   }
 
@@ -59,14 +67,29 @@ export default function Contact() {
         <div className="sec-divider" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '3rem', alignItems: 'start' }} className="contact-grid">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1.5fr', 
+        gap: '3rem', 
+        alignItems: 'start' 
+      }} className="contact-grid">
         {/* Info */}
         <div ref={infoRef} className={`reveal${infoVisible ? ' visible' : ''}`}>
-          <div className="glass" style={{ padding: '2rem' }}>
-            <h3 style={{ fontFamily: "'Orbitron',monospace", fontSize: '1rem', marginBottom: '1.5rem', color: 'var(--cyan)' }}>
+          <div className="glass" style={{ padding: '1.5rem' }}>
+            <h3 style={{ 
+              fontFamily: "'Orbitron',monospace", 
+              fontSize: 'clamp(0.9rem, 3vw, 1rem)', 
+              marginBottom: '1.5rem', 
+              color: 'var(--cyan)' 
+            }}>
               Let's Build Together
             </h3>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+            <p style={{ 
+              color: 'var(--text-dim)', 
+              fontSize: 'clamp(0.85rem, 2vw, 0.9rem)', 
+              lineHeight: 1.7, 
+              marginBottom: '2rem' 
+            }}>
               Have a project in mind? Want to collaborate? Or just want to say hi? I'd love to hear from you!
             </p>
             {[
@@ -75,15 +98,48 @@ export default function Contact() {
               { icon: '📍', label: 'Location', val: 'India 🇮🇳' },
               { icon: '🎓', label: 'College',  val: 'AKGEC, Ghaziabad' },
             ].map(item => (
-              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                <div style={{ width: 44, height: 44, borderRadius: 8, background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+              <div key={item.label} style={{ 
+                display: 'flex', 
+                alignItems: 'flex-start', 
+                gap: '0.75rem', 
+                marginBottom: '1.25rem' 
+              }}>
+                <div style={{ 
+                  width: 44, 
+                  height: 44, 
+                  borderRadius: 8, 
+                  background: 'rgba(168,85,247,0.1)', 
+                  border: '1px solid rgba(168,85,247,0.3)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  fontSize: '1.2rem', 
+                  flexShrink: 0 
+                }}>
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{item.label}</div>
+                  <div style={{ 
+                    fontSize: '0.75rem', 
+                    color: 'var(--text-dim)', 
+                    letterSpacing: '0.1em', 
+                    textTransform: 'uppercase',
+                    marginBottom: '0.25rem'
+                  }}>
+                    {item.label}
+                  </div>
                   {item.href
-                    ? <a href={item.href} style={{ fontSize: '0.9rem', color: 'var(--text)', textDecoration: 'none' }}>{item.val}</a>
-                    : <span style={{ fontSize: '0.9rem' }}>{item.val}</span>
+                    ? <a href={item.href} style={{ 
+                        fontSize: 'clamp(0.85rem, 2vw, 0.9rem)', 
+                        color: 'var(--text)', 
+                        textDecoration: 'none',
+                        wordBreak: 'break-word'
+                      }}>
+                        {item.val}
+                      </a>
+                    : <span style={{ fontSize: 'clamp(0.85rem, 2vw, 0.9rem)' }}>
+                        {item.val}
+                      </span>
                   }
                 </div>
               </div>
@@ -92,47 +148,110 @@ export default function Contact() {
         </div>
 
         {/* Form */}
-        <div ref={formRef} className={`glass reveal${formVisible ? ' visible' : ''}`} style={{ padding: '2rem' }}>
+        <div ref={formRef} className={`glass reveal${formVisible ? ' visible' : ''}`} style={{ padding: '1.5rem' }}>
           <form onSubmit={handleSubmit}>
             {[
               { id: 'name',    label: 'Your Name',      type: 'text',  ph: 'John Doe' },
               { id: 'email',   label: 'Email Address',  type: 'email', ph: 'john@example.com' },
             ].map(f => (
               <div key={f.id} style={{ marginBottom: '1.25rem' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--text-dim)', marginBottom: '0.5rem', textTransform: 'uppercase' }}>{f.label}</label>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: 'clamp(0.7rem, 1.5vw, 0.8rem)', 
+                  letterSpacing: '0.1em', 
+                  color: 'var(--text-dim)', 
+                  marginBottom: '0.5rem', 
+                  textTransform: 'uppercase' 
+                }}>
+                  {f.label}
+                </label>
                 <input
-                  type={f.type} name={f.id} value={form[f.id]}
-                  onChange={handleChange} placeholder={f.ph} required
+                  type={f.type} 
+                  name={f.id} 
+                  value={form[f.id]}
+                  onChange={handleChange} 
+                  placeholder={f.ph} 
+                  required
                   style={inputStyle}
-                  onFocus={e => { e.target.style.borderColor = 'var(--neon-purple)'; e.target.style.boxShadow = '0 0 15px var(--glow-purple)' }}
-                  onBlur={e  => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.boxShadow = 'none' }}
+                  onFocus={e => { 
+                    e.target.style.borderColor = 'var(--neon-purple)' 
+                    e.target.style.boxShadow = '0 0 15px var(--glow-purple)' 
+                  }}
+                  onBlur={e  => { 
+                    e.target.style.borderColor = 'var(--glass-border)' 
+                    e.target.style.boxShadow = 'none' 
+                  }}
                 />
               </div>
             ))}
             <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--text-dim)', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Message</label>
+              <label style={{ 
+                display: 'block', 
+                fontSize: 'clamp(0.7rem, 1.5vw, 0.8rem)', 
+                letterSpacing: '0.1em', 
+                color: 'var(--text-dim)', 
+                marginBottom: '0.5rem', 
+                textTransform: 'uppercase' 
+              }}>
+                Message
+              </label>
               <textarea
-                name="message" value={form.message} onChange={handleChange}
-                placeholder="Hey Devyansh, let's collaborate on..." required
+                name="message" 
+                value={form.message} 
+                onChange={handleChange}
+                placeholder="Hey Devyansh, let's collaborate on..." 
+                required
                 style={{ ...inputStyle, minHeight: 120 }}
-                onFocus={e => { e.target.style.borderColor = 'var(--neon-purple)'; e.target.style.boxShadow = '0 0 15px var(--glow-purple)' }}
-                onBlur={e  => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.boxShadow = 'none' }}
+                onFocus={e => { 
+                  e.target.style.borderColor = 'var(--neon-purple)' 
+                  e.target.style.boxShadow = '0 0 15px var(--glow-purple)' 
+                }}
+                onBlur={e  => { 
+                  e.target.style.borderColor = 'var(--glass-border)' 
+                  e.target.style.boxShadow = 'none' 
+                }}
               />
             </div>
 
-            <button type="submit" disabled={status === 'loading'}
+            <button 
+              type="submit" 
+              disabled={status === 'loading'}
               className="btn btn-primary"
-              style={{ width: '100%', justifyContent: 'center', opacity: status === 'loading' ? 0.7 : 1 }}>
+              style={{ 
+                width: '100%', 
+                justifyContent: 'center', 
+                opacity: status === 'loading' ? 0.7 : 1,
+                cursor: status === 'loading' ? 'not-allowed' : 'pointer'
+              }}>
               {status === 'loading' ? '⏳ Sending...' : status === 'success' ? '✅ Sent!' : '🚀 Send Message'}
             </button>
 
             {status === 'success' && (
-              <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', borderRadius: 8, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', fontSize: '0.9rem' }}>
+              <div style={{ 
+                marginTop: '1rem', 
+                padding: '0.75rem 1rem', 
+                borderRadius: 8, 
+                background: 'rgba(16,185,129,0.1)', 
+                border: '1px solid rgba(16,185,129,0.3)', 
+                color: '#10b981', 
+                fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                animation: 'fadeUp 0.3s ease'
+              }}>
                 ✅ Message sent! I'll get back to you soon.
               </div>
             )}
             {status === 'error' && (
-              <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', borderRadius: 8, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', fontSize: '0.9rem' }}>
+              <div style={{ 
+                marginTop: '1rem', 
+                padding: '0.75rem 1rem', 
+                borderRadius: 8, 
+                background: 'rgba(239,68,68,0.1)', 
+                border: '1px solid rgba(239,68,68,0.3)', 
+                color: '#ef4444', 
+                fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                animation: 'fadeUp 0.3s ease',
+                wordBreak: 'break-word'
+              }}>
                 ❌ {errMsg}
               </div>
             )}

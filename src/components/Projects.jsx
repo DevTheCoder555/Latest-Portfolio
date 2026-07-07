@@ -3,12 +3,20 @@ import { useReveal } from './useReveal'
 
 const PROJECTS = [
   {
+    title: 'Internsheild',
+    desc:  'An intelligent platform that detects fake internships and helps students avoid scams by analyzing internship listings against verified data sources.',
+    tags:  ['React', 'Machine Learning', 'Fraud Detection', 'Vercel'],
+    live:  'https://internsheild.vercel.app/',
+    github: 'https://github.com/DevTheCoder555/Internsheild',
+    bg:    'linear-gradient(135deg,#33051a,#0a3320)',
+  },
+  {
     title: 'Result Analysis System',
     desc:  'A system that analyzes student results using Excel data and generates detailed result analytics with visual dashboards.',
     tags:  ['React', 'Excel API', 'Data Analytics', 'Vercel'],
     live:  'https://result-analysis-new.vercel.app/',
     bg:    'linear-gradient(135deg,#1a0533,#0a1a33)',
-    
+
   },
   {
     title: 'OSS Website',
@@ -57,7 +65,12 @@ function ProjectCard({ project }) {
              className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}>
             🚀 Live Demo
           </a>
-
+          {project.github && (
+            <a href={project.github} target="_blank" rel="noreferrer"
+               className="btn btn-secondary" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}>
+              💻 GitHub
+            </a>
+          )}
         </div>
       </div>
     </div>
